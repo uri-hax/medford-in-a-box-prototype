@@ -1,0 +1,6 @@
+This folder has hopefully all the necessary files for the MEDFORD VSCode web extension.
+
+How to run for test (need npm/nodejs and vscode-test-web):
+npx @vscode/test-web --extensionDevelopmentPath=. testfiles
+
+vscode-test-web is currently in the gitignore
