@@ -1,0 +1,5 @@
+"Cannot load module "net""
+- remove dependency?
+- Clearly something is working bc all the syntax highlighting is there
+- is there some way to check if it's successfully connecting to the server?
+- what does that bit even do

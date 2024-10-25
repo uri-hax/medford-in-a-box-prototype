@@ -1,0 +1,90 @@
+{
+    "name": "medford-vscode",
+    "displayName": "medford-vscode",
+    "description": "A language server and extension for the MEDFORD markup language",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.68.0"
+    },
+    "activationEvents": [
+        "onLanguage:medford"
+    ],
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "medford",
+            "aliases": ["MEDFORD", "medford"],
+            "extensions": [".mfd"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "medford",
+            "scopeName": "source.mfd",
+            "path": "./syntaxes/mfd.tmLanguage.json"
+        }],
+        "commands": [
+            {
+                "command": "countDownBlocking",
+                "title": "Count down 10 seconds [Blocking]"
+            },
+            {
+                "command": "countDownNonBlocking",
+                "title": "Count down 10 seconds [Non Blocking]"
+            },
+            {
+                "command": "progress",
+                "title": "Start the progress"
+            },
+            {
+                "command": "registerCompletions",
+                "title": "Register completions"
+            },
+            {
+                "command": "showConfigurationAsync",
+                "title": "Show Json Example Configuration [Async]"
+            },
+            {
+                "command": "showConfigurationCallback",
+                "title": "Show Json Example Configuration [Callback]"
+            },
+            {
+                "command": "showConfigurationThread",
+                "title": "Show Json Example Configuration [Thread]"
+            },
+            {
+                "command": "unregisterCompletions",
+                "title": "Unregister completions"
+            }
+        ],
+        "configuration": {
+            "type": "object",
+            "title": "MEDFORD Server Configuration",
+            "properties": {
+                "jsonServer.exampleConfiguration": {
+                    "scope": "resource",
+                    "type": "string",
+                    "default": "You can override this message."
+                }
+            }
+        }
+    },{}
+    "main": "./client/out/extension",
+    "scripts": {
+      "vscode:prepublish": "npm run compile",
+      "compile": "tsc -b",
+      "watch": "tsc -b -w"
+    },
+    "devDependencies": {
+      "@types/node": "^16.11.6",
+      "@types/vscode": "^1.62.0",
+      "@typescript-eslint/eslint-plugin": "^5.3.0",
+      "@typescript-eslint/parser": "^5.3.0",
+      "eslint": "^8.2.0",
+      "typescript": "^4.4.4"
+    },
+    "dependencies": {
+      "vscode-languageclient": "^7.0.0"
+    }
+}
