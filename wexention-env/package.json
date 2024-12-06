@@ -54,6 +54,8 @@
     "browser": "./client/dist/extension",
     "scripts": {
         "vscode:prepublish": "npm run compile",
+        "compile-web": "node esbuild.js",
+		"test-web": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ./testfiles",
         "compile": "tsc -b",
         "watch": "tsc -b -w"
     },

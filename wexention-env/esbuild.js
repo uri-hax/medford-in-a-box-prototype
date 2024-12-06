@@ -13,7 +13,7 @@ async function main() {
     sourcesContent: false,
     platform: 'node',
     outfile: 'client/dist/extension.js',
-    external: ['vscode'],
+    external: ['vscode'/*, 'net', 'path', 'child_process'*/], /* TODO adding these is on the right track I think */
     logLevel: 'silent',
     plugins: [
       /* add to the end of plugins array */

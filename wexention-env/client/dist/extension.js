@@ -14809,11 +14809,11 @@ __export(extension_exports, {
   deactivate: () => deactivate
 });
 module.exports = __toCommonJS(extension_exports);
-var net = __toESM(require("net"));
-var path = __toESM(require("path"));
 var import_vscode = require("vscode");
 var import_node = __toESM(require_node3());
 var cp = __toESM(require("child_process"));
+var net = __toESM(require("net"));
+var path = __toESM(require("path"));
 var client;
 var DEBUG_CLIENT = false;
 function getClientOptions() {
