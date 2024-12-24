@@ -74,6 +74,12 @@ function startLangServer(command, args, cwd) {
     return new node_1.LanguageClient(command, serverOptions, getClientOptions());
 }
 function activate(context) {
+    // sw debugging test
+    console.log('Extension Path:', context.extensionPath);
+    console.log('Path Type:', typeof context.extensionPath);
+    const myPath = path.join(context.extensionPath, 'resources'); // Example
+    console.log('Joined Path:', myPath);
+    //
     if (context.extensionMode === vscode_1.ExtensionMode.Development && !DEBUG_CLIENT) {
         // Development - Run the server manually
         client = connectToLangServerTCP(2087);

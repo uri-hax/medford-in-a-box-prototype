@@ -51,17 +51,20 @@
         "commands": []
     },
     "main": "./client/out/extension",
-    "browser": "./client/dist/extension",
+    "browser": {
+        "./client/out/extension": "./client/dist/extension",
+        "child_process": false
+    },
     "scripts": {
         "vscode:prepublish": "npm run compile",
         "compile-web": "node esbuild.js",
-		"test-web": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ./testfiles",
+        "test-web": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ./testfiles",
         "compile": "tsc -b",
         "watch": "tsc -b -w"
     },
     "devDependencies": {
         "@types/node": "^16.11.6",
-        "@types/vscode": "^1.62.0",
+        "@types/vscode": "^1.96.0",
         "@typescript-eslint/eslint-plugin": "^5.3.0",
         "@typescript-eslint/parser": "^5.3.0",
         "esbuild": "^0.24.0",
