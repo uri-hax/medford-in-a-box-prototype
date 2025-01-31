@@ -14809,11 +14809,11 @@ __export(extension_exports, {
   deactivate: () => deactivate
 });
 module.exports = __toCommonJS(extension_exports);
+var net = __toESM(require("net"));
+var path = __toESM(require("path"));
 var import_vscode = require("vscode");
 var import_node = __toESM(require_node3());
 var cp = __toESM(require("child_process"));
-var net = __toESM(require("net"));
-var path = __toESM(require("path"));
 var client;
 var DEBUG_CLIENT = false;
 function getClientOptions() {
@@ -14846,9 +14846,14 @@ function installDependencies(pythonPath) {
 }
 function connectToLangServerTCP(addr) {
   const serverOptions = () => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const clientSocket = new net.Socket();
+      clientSocket.on("error", (err) => {
+        console.error("Error connecting to language server:", err);
+        reject(err);
+      });
       clientSocket.connect(addr, "127.0.0.1", () => {
+        console.log(`Connected to language server at port ${addr}`);
         resolve({
           reader: clientSocket,
           writer: clientSocket
@@ -14871,18 +14876,46 @@ function startLangServer(command, args, cwd) {
   return new import_node.LanguageClient(command, serverOptions, getClientOptions());
 }
 function activate(context) {
-  if (context.extensionMode === import_vscode.ExtensionMode.Development && !DEBUG_CLIENT) {
-    client = connectToLangServerTCP(2087);
-  } else {
-    const cwd = path.join(__dirname, "..", "..", "medford-language-server");
-    const pythonPath = import_vscode.workspace.getConfiguration("python").get("pythonPath");
-    if (!pythonPath) {
-      throw new Error("python.pythonPath` is not set");
-    }
-    installDependencies(pythonPath);
-    client = startLangServer(pythonPath, ["-m", "mfdls"], cwd);
+  console.log("Extension Path:", context.extensionPath);
+  console.log("Path Type:", typeof context.extensionPath);
+  if (typeof context.extensionPath !== "string") {
+    console.error("Context:", context);
+    throw new Error("context.extensionPath is not a string");
   }
-  context.subscriptions.push(client.start());
+  if (context.extensionMode === import_vscode.ExtensionMode.Development && !DEBUG_CLIENT) {
+    console.log("Running in Development Mode...");
+    try {
+      client = connectToLangServerTCP(2087);
+      context.subscriptions.push(client.start());
+    } catch (err) {
+      console.error("Failed to connect to language server (TCP):", err);
+    }
+  } else {
+    console.log("Running in Production Mode...");
+    console.log("__dirname:", __dirname);
+    if (typeof __dirname !== "string") {
+      throw new Error("__dirname is not a string");
+    }
+    const cwd = path.join(__dirname, "..", "..", "medford-language-server");
+    console.log("Language server working directory (cwd):", cwd);
+    const pythonPath = import_vscode.workspace.getConfiguration("python").get("pythonPath");
+    console.log("Python Path:", pythonPath);
+    if (!pythonPath) {
+      throw new Error("`python.pythonPath` is not set in the VS Code settings.");
+    }
+    try {
+      installDependencies(pythonPath);
+      console.log("Dependencies checked/installed successfully.");
+      client = startLangServer(pythonPath, ["-m", "mfdls"], cwd);
+      context.subscriptions.push(
+        client.start().catch((err) => {
+          console.error("Error starting the language client:", err);
+        })
+      );
+    } catch (err) {
+      console.error("Failed to start the language server:", err);
+    }
+  }
 }
 function deactivate() {
   return client ? client.stop() : Promise.resolve();
