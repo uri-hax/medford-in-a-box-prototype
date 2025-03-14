@@ -59,7 +59,7 @@
 
 <div id="header" class="header"> 
 	<header class="welcome">
-		Welcome to Medford!
+		@ MEDFORD-in-a-box
 		<span class="status"> (JS input will be replaced soon!)</span>
 	</header>
 </div>
@@ -85,20 +85,21 @@
 
 	.monaco-container {
 		display: flex;
-		width: 100%;
+		width: 100% !important;
 		height: 67%;
 	}
 
 	.header {
-		font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+		font-family:'Courier New', Courier, monospace;
 		color: #c895b8;
-		background-color: rgb(35, 39, 47);
+		background: linear-gradient(to bottom, #1f1f1f, #1e1e1e);
 		padding: 1em 2em;
-		margin-bottom: 0.1em;
+		margin-bottom: 0.15em;
 	}
 
 	.welcome {
 		font-size: 24px;
+		font-weight: 800;
 	}
 
 	.status {
