@@ -1,8 +1,3 @@
-
-
-<header class="welcome"> Welcome to Medford!</header>
-<header class="status"> JS input will be replaced soon!</header>
-
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
 	import type * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
@@ -11,91 +6,76 @@
 	let monaco: typeof Monaco;
 	let editorContainer: HTMLElement;
 	let outputContainer: HTMLElement;
-	let output = '';
+	let output = $state();
 
 	onMount(async () => {
 		// Import our 'monaco.ts' file here
 		// (onMount() will only be executed in the browser, which is what we want)
-		//const monaco = (await import('$lib/monaco')).default;
+		// const monaco = (await import('$lib/monaco')).default;
 
-		// Your monaco instance is ready, let's display some code!
-		//const editor = monaco.editor.create(editorContainer);
-		/*const model = monaco.editor.createModel(
-			"console.log('Hello Medford Family!')",
-			'javascript'
-		);*/
 		const monacoModule = await import('monaco-editor');
 		monaco = monacoModule as unknown as typeof Monaco;
 		
-		// Correctly assigning to global editor variable
+		// correctly assigning to global editor variable
 		editor = monaco.editor.create(editorContainer, {
-			value: "console.log('Hello Medford Family!')",
+			value: "console.log('Hello MEDFORD Family!')\nconsole.log('pardon our dust')",
 			language: 'javascript',
-			theme: 'vs-dark'
+			theme: 'vs-dark',
+			fontSize: 16
 		});
-		//editor.setModel(model);
-		//console.log(editor.getValue())
 	});
 
-	/*function runCode() {
+	onDestroy(() => {
 		if (editor) {
-				try {
-					eval(editor.getValue());
-					let output = eval(editor.getValue());
-					console.log(output + "1")
-					outputContainer.textContent = output;
-					//console.log(output)
-					//console.log(outputContainer.textContent)
-				} catch (e) {
-					const errorMessage = e instanceof Error ? e.message : String(e);
-					outputContainer.textContent = `Error: ${errorMessage}`;
-					console.log("2")
-				}
+			editor.dispose();
+			editor = null; 
 		}
-		console.log("Code run")
-	}*/
-
+	});
 
 	function runCode() {
-    if (!editor) {
-        outputContainer.textContent = "Editor is not ready.";
-        return;
-    }
+		if (!editor) {
+			output = "Sorry, the editor is not ready.";
+			return;
+		}
 
-    try {
-        let logOutput = "";
-        const originalConsoleLog = console.log;
+		try {
+			let logOutput = "";
+			const originalConsoleLog = console.log;
 
-        console.log = (...args) => {
-            logOutput += args.join(" ") + "\n";
-        };
-		//eval cannot store the output of code
-        let result = eval(editor.getValue());
-        console.log = originalConsoleLog;
+			console.log = (...args) => {
+				logOutput += args.join(" ") + "\n";
+			};
+			//eval cannot store the output of code
+			let result = eval(editor.getValue());
+			console.log = originalConsoleLog;
 
-        outputContainer.textContent = logOutput || (result !== undefined ? result.toString() : "");
-    } catch (e) {
-        outputContainer.textContent = `Error: ${e instanceof Error ? e.message : String(e)}`;
-    }
-}
+			output = logOutput || (result !== undefined ? result.toString() : "");
+		} catch (e) {
+			output = `Error: ${e instanceof Error ? e.message : String(e)}`;
+		}
 
-
-
-	onDestroy(() => {
-    if (editor) {
-      editor.dispose();
-      editor = null; 
-    }
-  });
-
-
-
+	}
 </script>
 
-  
-  
-  <style>
-	
+<div id="header" class="header"> 
+	<header class="welcome">
+		Welcome to Medford!
+		<span class="status"> (JS input will be replaced soon!)</span>
+	</header>
+</div>
+
+<div class="monaco-container" bind:this={editorContainer}> 
+	<!-- Editor will be mounted here -->
+</div>
+
+<button onclick={runCode} class="run-code">Run Code</button>
+
+<div bind:this={outputContainer} class="outputContainer">
+	<!-- Output will be mounted here -->
+	 {output}
+</div> 
+
+<style>
 	:global(body) {
 		height: 100vh;
 		background-color: rgb(50, 48, 48);
@@ -103,47 +83,46 @@
 		margin: 0;
 	}
 
-	.container {
+	.monaco-container {
 		display: flex;
 		width: 100%;
-		height: 400px;
+		height: 67%;
 	}
-	.outputContainer {
-		width: 100%;
-		height: 400px;
-		font-size: 20px;
-		font: black;
-		background-color: rgb(93, 92, 92);
-		color: white;
+
+	.header {
+		font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+		color: #c895b8;
+		background-color: rgb(35, 39, 47);
+		padding: 1em 2em;
+		margin-bottom: 0.1em;
 	}
+
 	.welcome {
-		font-size: 35px;
-		color: rgb(130, 161, 130);		
-		height: 60px;
-		background-color: rgb(50, 48, 48);
+		font-size: 24px;
 	}
 
 	.status {
-		font-size: 20px;
-		color: rgb(130, 161, 130);		
-		height: 60px;
-		background-color: rgb(50, 48, 48);
+		font-size: 18px;
 	}
 	.run-code {
-		background-color: rgb(49, 225, 102);
+		font-family:'Courier New', Courier, monospace;
+		font-size: 18px;
+		font-weight: 800;
+		background-color: #c895b8;
 		color: white;
 		padding: 10px;
 		width: 100%;
+		cursor: pointer;
 	}
-		
-  </style>
-  
 
-
-
-<div class="container" bind:this={editorContainer}> </div>
-<button on:click={runCode} class="run-code">Run Code</button>
-<div bind:this={outputContainer} class="outputContainer"></div> 
-
-	  
-
+	.outputContainer {
+		width: 100%;
+		height: 16.5%;
+		font-family:'Courier New', Courier, monospace;
+		font-size: 20px;
+		font: black;
+		background-color: rgb(46, 46, 46);
+		color: white;
+		padding: 1em 2em;
+	}
+</style>
