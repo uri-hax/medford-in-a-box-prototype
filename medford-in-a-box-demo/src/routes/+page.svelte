@@ -16,9 +16,11 @@
 		const monacoModule = await import('monaco-editor');
 		monaco = monacoModule as unknown as typeof Monaco;
 		
+		const initCode = "console.log('Hello MEDFORD Family!')\nconsole.log('pardon our dust')"
+
 		// correctly assigning to global editor variable
 		editor = monaco.editor.create(editorContainer, {
-			value: "console.log('Hello MEDFORD Family!')\nconsole.log('pardon our dust')",
+			value: initCode,
 			language: 'javascript',
 			theme: 'vs-dark',
 			fontSize: 16
@@ -117,13 +119,12 @@
 	}
 
 	.outputContainer {
-		width: 100%;
 		height: 16.5%;
 		font-family:'Courier New', Courier, monospace;
 		font-size: 20px;
 		font: black;
 		background-color: rgb(46, 46, 46);
 		color: white;
-		padding: 1em 2em;
+		padding: 1em;
 	}
 </style>
