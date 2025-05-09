@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "monaco-editor-textmate": "^4.0.0"
+  }
+}

@@ -1,18 +1,20 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
 	import type * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
+	import { setupTextMate } from '../monaco-textmate';
+	import { 'mfd' } from '../monaco-textmate';
+	
 
 	let editor: Monaco.editor.IStandaloneCodeEditor | null = null;
 	let monaco: typeof Monaco;
-	let editorContainer: HTMLElement;
+	let editorContainer: HTMLDivElement;
 	let outputContainer: HTMLElement;
 	let output = $state();
 
 	onMount(async () => {
 		// Import our 'monaco.ts' file here
 		// (onMount() will only be executed in the browser, which is what we want)
-		// const monaco = (await import('$lib/monaco')).default;
-
+		monaco.languages.register({ id: 'mfd' });
 		const monacoModule = await import('monaco-editor');
 		monaco = monacoModule as unknown as typeof Monaco;
 		
@@ -21,10 +23,11 @@
 		// correctly assigning to global editor variable
 		editor = monaco.editor.create(editorContainer, {
 			value: initCode,
-			language: 'javascript',
+			language: 'mfd',
 			theme: 'vs-dark',
 			fontSize: 16
 		});
+		await setupTextMate(monaco, editor, 'mfd', 'source.mfd', '/syntax/mfd.tmLanguage.json');
 	});
 
 	onDestroy(() => {
